@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý nhân viên</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        header {
+            height: 70px;
+            background: #111827;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 45px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            background: #f59e0b;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .brand h2 {
+            font-size: 19px;
+        }
+
+        .brand p {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 3px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 38px auto;
+            padding: 0 24px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .page-header h1 {
+            font-size: 27px;
+            margin-bottom: 6px;
+        }
+
+        .page-header p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .back-button {
+            text-decoration: none;
+            color: #374151;
+            background: white;
+            border: 1px solid #d1d5db;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .summary {
+            background: white;
+            padding: 18px 22px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #eef0f3;
+        }
+
+        .summary strong {
+            font-size: 24px;
+            margin-right: 7px;
+        }
+
+        .summary span {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .table-wrapper {
+            background: white;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid #eef0f3;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, .05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            background: #f9fafb;
+            color: #6b7280;
+            font-size: 12px;
+            padding: 16px 20px;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 18px 20px;
+            border-top: 1px solid #f0f1f3;
+            font-size: 14px;
+        }
+
+        tbody tr:hover {
+            background: #fafafa;
+        }
+
+        .role {
+            display: inline-block;
+            background: #ede9fe;
+            color: #6d28d9;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 12px;
+            padding: 35px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="brand">
+            <div class="brand-icon">🍽️</div>
+            <div>
+                <h2>Restaurant Management</h2>
+                <p>Management & Operations System</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <div class="page-header">
+            <div>
+                <h1>👨‍🍳 Quản lý nhân viên</h1>
+                <p>Danh sách nhân sự đang có trong hệ thống.</p>
+            </div>
+            <a href="/" class="back-button">← Dashboard</a>
+        </div>
+
+        <div class="summary">
+            <strong>{{ employees|length }}</strong>
+            <span>nhân viên trong hệ thống</span>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Họ tên</th>
+                        <th>Tài khoản</th>
+                        <th>Vai trò</th>
+                        <th>Ngày tạo</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for employee in employees %}
+                    <tr>
+                        <td>#{{ employee.id }}</td>
+                        <td><strong>{{ employee.name }}</strong></td>
+                        <td>{{ employee.username }}</td>
+                        <td><span class="role">{{ employee.role }}</span></td>
+                        <td>
+                            {% if employee.created_at %}
+                            {{ employee.created_at.strftime("%d/%m/%Y %H:%M") }}
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+    <footer>Restaurant Management System • FastAPI • PostgreSQL • Docker</footer>
+
+</body>
+
+</html>

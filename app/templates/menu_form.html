@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% if item %}
+    <title>Sửa món ăn</title>
+    {% else %}
+    <title>Thêm món ăn</title>
+    {% endif %}
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        header {
+            height: 70px;
+            background: #111827;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 45px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            background: #f59e0b;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .brand h2 {
+            font-size: 19px;
+        }
+
+        .brand p {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 3px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 38px auto;
+            padding: 0 24px;
+        }
+
+        .page-header {
+            margin-bottom: 24px;
+        }
+
+        .page-header h1 {
+            font-size: 27px;
+            margin-bottom: 7px;
+        }
+
+        .page-header p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .form-card {
+            background: white;
+            border: 1px solid #eef0f3;
+            border-radius: 14px;
+            padding: 28px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #374151;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 11px 12px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            color: #1f2937;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .hint {
+            color: #9ca3af;
+            font-size: 12px;
+        }
+
+        .current-status {
+            display: inline-block;
+            width: fit-content;
+            padding: 6px 11px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .available {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .unavailable {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 26px;
+            padding-top: 22px;
+            border-top: 1px solid #eef0f3;
+        }
+
+        .button {
+            text-decoration: none;
+            border-radius: 8px;
+            padding: 11px 18px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .cancel-button {
+            background: white;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .cancel-button:hover {
+            background: #f3f4f6;
+        }
+
+        .save-button {
+            color: white;
+            background: #2563eb;
+            border: 1px solid #2563eb;
+        }
+
+        .save-button:hover {
+            background: #1d4ed8;
+        }
+
+        footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 12px;
+            padding: 35px;
+        }
+
+        @media (max-width: 650px) {
+            header {
+                padding: 0 18px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+
+            .actions {
+                flex-direction: column-reverse;
+            }
+
+            .button {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="brand">
+
+            <div class="brand-icon">🍽️</div>
+
+            <div>
+                <h2>Restaurant Management</h2>
+                <p>Management & Operations System</p>
+            </div>
+
+        </div>
+    </header>
+
+    <main class="container">
+
+        <div class="page-header">
+
+            {% if item %}
+
+            <h1>✎ Sửa món ăn</h1>
+            <p>
+                Cập nhật thông tin món
+                <strong>{{ item.name }}</strong>.
+            </p>
+
+            {% else %}
+
+            <h1>➕ Thêm món ăn</h1>
+            <p>Thêm món ăn mới vào thực đơn của nhà hàng.</p>
+
+            {% endif %}
+
+        </div>
+
+        <div class="form-card">
+
+            {% if item %}
+            <form method="POST" action="/menu/{{ item.id }}/edit">
+                {% else %}
+                <form method="POST" action="/menu/new">
+                    {% endif %}
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label for="name">Tên món</label>
+
+                            <input type="text" id="name" name="name" value="{{ item.name if item else '' }}"
+                                placeholder="Ví dụ: Pho Bo" maxlength="100" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="category">Danh mục</label>
+
+                            <input type="text" id="category" name="category" value="{{ item.category if item else '' }}"
+                                placeholder="Ví dụ: Main, Drink" maxlength="50" required>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="price">Giá bán (VNĐ)</label>
+
+                            <input type="number" id="price" name="price" value="{{ item.price if item else '' }}"
+                                placeholder="Ví dụ: 55000" min="0" step="1000" required>
+
+                            <div class="hint">
+                                Nhập giá bằng số, ví dụ 55000 tương ứng 55.000 ₫.
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="description">Mô tả</label>
+
+                            <textarea id="description" name="description" maxlength="500"
+                                placeholder="Mô tả ngắn về món ăn...">{{ item.description if item and item.description else '' }}</textarea>
+                        </div>
+
+                        {% if item %}
+
+                        <div class="form-group full-width">
+                            <label>Trạng thái hiện tại</label>
+
+                            {% if item.status == "available" %}
+
+                            <span class="current-status available">
+                                ● Có sẵn
+                            </span>
+
+                            {% else %}
+
+                            <span class="current-status unavailable">
+                                ● Ngừng bán
+                            </span>
+
+                            {% endif %}
+
+                            <div class="hint">
+                                Trạng thái bán được thay đổi tại trang Quản lý thực đơn.
+                            </div>
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+                    <div class="actions">
+
+                        <a href="/menu" class="button cancel-button">
+                            Hủy
+                        </a>
+
+                        <button type="submit" class="button save-button">
+
+                            {% if item %}
+                            ✓ Lưu thay đổi
+                            {% else %}
+                            + Thêm món
+                            {% endif %}
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+        </div>
+
+    </main>
+
+    <footer>
+        Restaurant Management System • FastAPI • PostgreSQL • Docker
+    </footer>
+
+</body>
+
+</html>

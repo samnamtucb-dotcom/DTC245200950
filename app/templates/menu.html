@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý thực đơn</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        header {
+            height: 70px;
+            background: #111827;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 45px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            background: #f59e0b;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .brand h2 {
+            font-size: 19px;
+        }
+
+        .brand p {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 3px;
+        }
+
+        .container {
+            max-width: 1250px;
+            margin: 38px auto;
+            padding: 0 24px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .page-header h1 {
+            font-size: 27px;
+            margin-bottom: 6px;
+        }
+
+        .page-header p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .button {
+            text-decoration: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .back-button {
+            color: #374151;
+            background: white;
+            border: 1px solid #d1d5db;
+        }
+
+        .back-button:hover {
+            background: #f3f4f6;
+        }
+
+        .create-button {
+            color: white;
+            background: #2563eb;
+            border: 1px solid #2563eb;
+        }
+
+        .create-button:hover {
+            background: #1d4ed8;
+        }
+
+        .message {
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .success-message {
+            background: #ecfdf5;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .warning-message {
+            background: #fff7ed;
+            color: #9a3412;
+            border: 1px solid #fed7aa;
+        }
+
+        .summary {
+            background: white;
+            padding: 18px 22px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #eef0f3;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        .summary strong {
+            font-size: 24px;
+            margin-right: 7px;
+        }
+
+        .summary span {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .table-wrapper {
+            background: white;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid #eef0f3;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            background: #f9fafb;
+            color: #6b7280;
+            font-size: 12px;
+            text-transform: uppercase;
+            padding: 16px 18px;
+            border-bottom: 1px solid #e5e7eb;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 17px 18px;
+            border-bottom: 1px solid #f0f1f3;
+            font-size: 14px;
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background: #fafafa;
+        }
+
+        .price {
+            font-weight: bold;
+            color: #111827;
+            white-space: nowrap;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .available {
+            color: #15803d;
+            background: #dcfce7;
+        }
+
+        .unavailable {
+            color: #b91c1c;
+            background: #fee2e2;
+        }
+
+        .description {
+            color: #6b7280;
+            max-width: 260px;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 7px;
+            align-items: center;
+        }
+
+        .item-actions form {
+            margin: 0;
+        }
+
+        .action-button {
+            display: inline-block;
+            text-decoration: none;
+            border-radius: 7px;
+            padding: 8px 11px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+
+        .edit-button {
+            color: #1d4ed8;
+            background: #dbeafe;
+            border: 1px solid #bfdbfe;
+        }
+
+        .edit-button:hover {
+            background: #bfdbfe;
+        }
+
+        .disable-button {
+            color: #b91c1c;
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+        }
+
+        .disable-button:hover {
+            background: #fecaca;
+        }
+
+        .enable-button {
+            color: #15803d;
+            background: #dcfce7;
+            border: 1px solid #bbf7d0;
+        }
+
+        .enable-button:hover {
+            background: #bbf7d0;
+        }
+
+        .empty {
+            padding: 40px;
+            text-align: center;
+            color: #9ca3af;
+        }
+
+        footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 12px;
+            padding: 35px;
+        }
+
+        @media (max-width: 850px) {
+            header {
+                padding: 0 18px;
+            }
+
+            .page-header {
+                align-items: flex-start;
+                gap: 20px;
+                flex-direction: column;
+            }
+
+            .table-wrapper {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 1000px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="brand">
+            <div class="brand-icon">🍽️</div>
+
+            <div>
+                <h2>Restaurant Management</h2>
+                <p>Management & Operations System</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <div class="page-header">
+
+            <div>
+                <h1>🍜 Quản lý thực đơn</h1>
+                <p>Thêm, chỉnh sửa và quản lý trạng thái món ăn.</p>
+            </div>
+
+            <div class="header-actions">
+
+                <a href="/" class="button back-button">
+                    ← Dashboard
+                </a>
+
+                <a href="/menu/new" class="button create-button">
+                    + Thêm món
+                </a>
+
+            </div>
+
+        </div>
+
+        {% if request.query_params.get("created") == "1" %}
+        <div class="message success-message">
+            ✓ Món ăn mới đã được thêm vào PostgreSQL.
+        </div>
+        {% endif %}
+
+        {% if request.query_params.get("updated") == "1" %}
+        <div class="message success-message">
+            ✓ Thông tin món ăn đã được cập nhật.
+        </div>
+        {% endif %}
+
+        {% if request.query_params.get("disabled") == "1" %}
+        <div class="message warning-message">
+            ● Món ăn đã được chuyển sang trạng thái ngừng bán.
+        </div>
+        {% endif %}
+
+        {% if request.query_params.get("enabled") == "1" %}
+        <div class="message success-message">
+            ✓ Món ăn đã được mở bán trở lại.
+        </div>
+        {% endif %}
+
+        <div class="summary">
+            <strong>{{ menu_items|length }}</strong>
+            <span>món ăn đang được quản lý</span>
+        </div>
+
+        <div class="table-wrapper">
+
+            {% if menu_items %}
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên món</th>
+                        <th>Danh mục</th>
+                        <th>Giá</th>
+                        <th>Mô tả</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for item in menu_items %}
+
+                    <tr>
+
+                        <td>#{{ item.id }}</td>
+
+                        <td>
+                            <strong>{{ item.name }}</strong>
+                        </td>
+
+                        <td>{{ item.category }}</td>
+
+                        <td class="price">
+                            {{ "{:,.0f}".format(item.price) }} ₫
+                        </td>
+
+                        <td class="description">
+                            {{ item.description or "Không có mô tả" }}
+                        </td>
+
+                        <td>
+
+                            {% if item.status == "available" %}
+
+                            <span class="badge available">
+                                ● Có sẵn
+                            </span>
+
+                            {% else %}
+
+                            <span class="badge unavailable">
+                                ● Ngừng bán
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            <div class="item-actions">
+
+                                <a href="/menu/{{ item.id }}/edit" class="action-button edit-button">
+                                    ✎ Sửa
+                                </a>
+
+                                {% if item.status == "available" %}
+
+                                <form method="POST" action="/menu/{{ item.id }}/disable"
+                                    onsubmit="return confirm('Ngừng bán món {{ item.name }}?');">
+
+                                    <button type="submit" class="action-button disable-button">
+                                        Ngừng bán
+                                    </button>
+
+                                </form>
+
+                                {% else %}
+
+                                <form method="POST" action="/menu/{{ item.id }}/enable">
+
+                                    <button type="submit" class="action-button enable-button">
+                                        ✓ Mở bán
+                                    </button>
+
+                                </form>
+
+                                {% endif %}
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="empty">
+                Chưa có món ăn nào trong hệ thống.
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </main>
+
+    <footer>
+        Restaurant Management System • FastAPI • PostgreSQL • Docker
+    </footer>
+
+</body>
+
+</html>

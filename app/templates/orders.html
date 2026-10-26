@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Quản lý đơn hàng</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        header {
+            height: 70px;
+            background: #111827;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 45px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            background: #f59e0b;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .brand h2 {
+            font-size: 19px;
+        }
+
+        .brand p {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 3px;
+        }
+
+        .container {
+            max-width: 1250px;
+            margin: 38px auto;
+            padding: 0 24px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .page-header h1 {
+            font-size: 27px;
+            margin-bottom: 6px;
+        }
+
+        .page-header p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .button {
+            text-decoration: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .back-button {
+            color: #374151;
+            background: white;
+            border: 1px solid #d1d5db;
+        }
+
+        .back-button:hover {
+            background: #f3f4f6;
+        }
+
+        .create-button {
+            color: white;
+            background: #2563eb;
+            border: 1px solid #2563eb;
+        }
+
+        .create-button:hover {
+            background: #1d4ed8;
+        }
+
+        .success-message {
+            background: #ecfdf5;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .cancel-message {
+            background: #fff7ed;
+            color: #9a3412;
+            border: 1px solid #fed7aa;
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .summary {
+            background: white;
+            padding: 18px 22px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #eef0f3;
+        }
+
+        .summary strong {
+            font-size: 24px;
+            margin-right: 7px;
+        }
+
+        .summary span {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .table-wrapper {
+            background: white;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid #eef0f3;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            background: #f9fafb;
+            color: #6b7280;
+            font-size: 12px;
+            padding: 16px 18px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 18px;
+            border-top: 1px solid #f0f1f3;
+            font-size: 14px;
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background: #fafafa;
+        }
+
+        .amount {
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .completed {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .cancelled {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .other {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 7px;
+            align-items: center;
+        }
+
+        .order-actions form {
+            margin: 0;
+        }
+
+        .action-button {
+            border: none;
+            border-radius: 7px;
+            padding: 8px 11px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+
+        .complete-button {
+            background: #dcfce7;
+            color: #15803d;
+            border: 1px solid #bbf7d0;
+        }
+
+        .complete-button:hover {
+            background: #bbf7d0;
+        }
+
+        .cancel-button {
+            background: #fee2e2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+        }
+
+        .cancel-button:hover {
+            background: #fecaca;
+        }
+
+        .finished-text {
+            color: #9ca3af;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .empty {
+            padding: 40px;
+            text-align: center;
+            color: #9ca3af;
+        }
+
+        footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 12px;
+            padding: 35px;
+        }
+
+        @media (max-width: 850px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 18px;
+            }
+
+            .table-wrapper {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 1050px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="brand">
+
+            <div class="brand-icon">🍽️</div>
+
+            <div>
+                <h2>Restaurant Management</h2>
+                <p>Management & Operations System</p>
+            </div>
+
+        </div>
+    </header>
+
+    <main class="container">
+
+        <div class="page-header">
+
+            <div>
+                <h1>🧾 Quản lý đơn hàng</h1>
+                <p>Theo dõi, tạo và xử lý đơn hàng cho nhà hàng.</p>
+            </div>
+
+            <div class="header-actions">
+
+                <a href="/" class="button back-button">
+                    ← Dashboard
+                </a>
+
+                <a href="/orders/new" class="button create-button">
+                    + Tạo đơn hàng
+                </a>
+
+            </div>
+
+        </div>
+
+        {% if request.query_params.get("created") == "1" %}
+        <div class="success-message">
+            ✓ Đơn hàng đã được tạo và lưu thành công vào PostgreSQL.
+        </div>
+        {% endif %}
+
+        {% if request.query_params.get("completed") == "1" %}
+        <div class="success-message">
+            ✓ Đơn hàng đã được xác nhận hoàn thành.
+        </div>
+        {% endif %}
+
+        {% if request.query_params.get("cancelled") == "1" %}
+        <div class="cancel-message">
+            ● Đơn hàng đã được hủy.
+        </div>
+        {% endif %}
+
+        <div class="summary">
+            <strong>{{ orders|length }}</strong>
+            <span>đơn hàng trong hệ thống</span>
+        </div>
+
+        <div class="table-wrapper">
+
+            {% if orders %}
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Mã đơn</th>
+                        <th>Bàn</th>
+                        <th>Nhân viên ID</th>
+                        <th>Trạng thái</th>
+                        <th>Tổng tiền</th>
+                        <th>Thời gian</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for order in orders %}
+
+                    <tr>
+
+                        <td>
+                            <strong>#{{ order.id }}</strong>
+                        </td>
+
+                        <td>
+                            {% if order.table %}
+                            Bàn {{ order.table.table_number }}
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {{ order.employee_id if order.employee_id else "-" }}
+                        </td>
+
+                        <td>
+
+                            {% if order.status == "pending" %}
+
+                            <span class="badge pending">
+                                ● Chờ xử lý
+                            </span>
+
+                            {% elif order.status == "completed" %}
+
+                            <span class="badge completed">
+                                ● Hoàn thành
+                            </span>
+
+                            {% elif order.status == "cancelled" %}
+
+                            <span class="badge cancelled">
+                                ● Đã hủy
+                            </span>
+
+                            {% else %}
+
+                            <span class="badge other">
+                                {{ order.status }}
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td class="amount">
+                            {{ "{:,.0f}".format(order.total_amount) }} ₫
+                        </td>
+
+                        <td>
+
+                            {% if order.created_at %}
+                            {{ order.created_at.strftime("%d/%m/%Y %H:%M") }}
+                            {% else %}
+                            -
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            {% if order.status == "pending" %}
+
+                            <div class="order-actions">
+
+                                <form method="POST" action="/orders/{{ order.id }}/complete">
+
+                                    <button type="submit" class="action-button complete-button">
+                                        ✓ Hoàn thành
+                                    </button>
+
+                                </form>
+
+                                <form method="POST" action="/orders/{{ order.id }}/cancel"
+                                    onsubmit="return confirm('Bạn có chắc muốn hủy đơn #{{ order.id }}?');">
+
+                                    <button type="submit" class="action-button cancel-button">
+                                        ✕ Hủy
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                            {% elif order.status == "completed" %}
+
+                            <span class="finished-text">
+                                ✓ Đã xử lý
+                            </span>
+
+                            {% elif order.status == "cancelled" %}
+
+                            <span class="finished-text">
+                                Đã đóng
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            {% else %}
+
+            <div class="empty">
+                Chưa có đơn hàng nào.
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </main>
+
+    <footer>
+        Restaurant Management System • FastAPI • PostgreSQL • Docker
+    </footer>
+
+</body>
+
+</html>
